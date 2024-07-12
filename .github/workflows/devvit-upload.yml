@@ -1,0 +1,26 @@
+name: Publish to Devvit
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  push-to-devvit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Devvit Upload Github Action
+        uses: isFakeAccount/devvit-upload-github-action@v0.0.12
+        with:
+          refresh_token: ${{ secrets.REFRESH_TOKEN }}
+          upload_args: "--bump=minor"
+
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: Bumping the app version number
